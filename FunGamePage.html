@@ -126,18 +126,36 @@
         }
         .moonlight-greatsword-header {
             position: absolute;
-            right: 90px; /* moved left from 36px */
-            top: 50%;
-            transform: translateY(-50%);
-            cursor: pointer;
+            top: 18px;
+            right: 24px;
             z-index: 30;
+            cursor: pointer;
             transition: transform 0.2s;
             display: flex;
-            align-items: center;
+            align-items: flex-start;
         }
         .moonlight-greatsword-header:hover {
-            transform: translateY(-50%) scale(1.10) rotate(-6deg);
+            transform: scale(1.10) rotate(-6deg);
             filter: drop-shadow(0 2px 12px #b0e0ff);
+        }
+        .moonlight-dropdown {
+            display: none;
+            position: absolute;
+            left: 60px;
+            top: 0;
+            background: #f8f9fa;
+            border: 1.5px solid #3ec6ff;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(62,198,255,0.10);
+            padding: 10px 16px;
+            font-size: 1em;
+            color: #232323;
+            min-width: 180px;
+            z-index: 40;
+            transition: opacity 0.2s;
+        }
+        .moonlight-greatsword-header.active .moonlight-dropdown {
+            display: block;
         }
         .page-section {
             display: none;
@@ -215,45 +233,6 @@
             line-height: 1.6;
             letter-spacing: 0.01em;
         }
-        /* Modal styles */
-        .modal-bg {
-            display: none;
-            position: fixed;
-            z-index: 200;
-            left: 0;
-            top: 0;
-            width: 100vw;
-            height: 100vh;
-            background: rgba(0,0,0,0.45);
-            justify-content: center;
-            align-items: center;
-        }
-        .modal-bg.active {
-            display: flex;
-        }
-        .modal-content {
-            background: #fff;
-            border-radius: 14px;
-            padding: 32px 28px;
-            max-width: 420px;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.18);
-            text-align: center;
-            position: relative;
-        }
-        .modal-content h2 {
-            margin-top: 0;
-            color: #1e6fa7;
-        }
-        .modal-close {
-            position: absolute;
-            top: 12px;
-            right: 18px;
-            font-size: 1.6em;
-            color: #888;
-            cursor: pointer;
-            background: none;
-            border: none;
-        }
         @media (max-width: 900px) {
             .nav-header {
                 font-size: 1.3em;
@@ -290,7 +269,13 @@
                 height: 28px;
             }
             .moonlight-greatsword-header {
-                right: 60px; /* moved left from 12px */
+                right: 12px;
+                top: 0;
+            }
+            .moonlight-dropdown {
+                left: 44px;
+                min-width: 120px;
+                font-size: 0.95em;
             }
         }
     </style>
@@ -326,13 +311,16 @@
                 marquee.classList.add('stopped');
             });
         };
-        // Moonlight Greatsword modal logic
-        function showMoonlightModal() {
-            document.getElementById('moonlight-modal-bg').classList.add('active');
+        // Moonlight Greatsword dropdown logic
+        function toggleMoonlightDropdown(event) {
+            event.stopPropagation();
+            var sword = document.getElementById('moonlightSword');
+            sword.classList.toggle('active');
         }
-        function closeMoonlightModal() {
-            document.getElementById('moonlight-modal-bg').classList.remove('active');
-        }
+        document.addEventListener('click', function(e) {
+            var sword = document.getElementById('moonlightSword');
+            if (sword) sword.classList.remove('active');
+        });
     </script>
 </head>
 <body>
@@ -351,18 +339,23 @@
             </div>
         </div>
         <div id="nav-header" class="nav-header">Welcome to the Fun Game Page!</div>
-        <!-- Moonlight Greatsword Icon in header -->
-        <div class="moonlight-greatsword-header" onclick="showMoonlightModal()" title="Moonlight Greatsword">
-            <!-- SVG: Moonlight Greatsword (DS3 style) -->
+    </div>
+    <div id="home" class="page-section">
+        <div class="header"></div>
+        <div class="summary">
+            This webpage is about games I like. You can find multiple pages dedicated to different games with an essay style summary of the game and why I like it.
+        </div>
+        <div class="interactive-tag" onclick="alert('You found the secret tag! Try exploring the other pages for more surprises!')" style="margin-top:8px; display:inline-block; cursor:pointer; background:linear-gradient(90deg,#3ec6ff,#b0e0ff); color:#232323; font-weight:bold; border-radius:10px; padding:2px 8px; font-size:0.7em; box-shadow:0 1px 3px rgba(62,198,255,0.10); opacity:0.5; transition:opacity 0.2s,transform 0.2s; position:relative;">
+            <span role="img" aria-label="sparkle">✨</span>
+        </div>
+    </div>
+    <div id="page2" class="page-section" style="position:relative;">
+        <div class="moonlight-greatsword-header" id="moonlightSword" title="Moonlight Greatsword" onclick="toggleMoonlightDropdown(event)">
             <svg width="54" height="54" viewBox="0 0 54 54" fill="none">
-                <!-- Blade -->
                 <rect x="25" y="7" width="4" height="30" rx="2" fill="url(#bladeGradient)" stroke="#3ec6ff" stroke-width="1.5"/>
-                <!-- Crescent crossguard -->
-                <path d="M19 36 Q27 44 35 36" stroke="#b0e0ff" stroke-width="3.5" fill="none" filter="url(#glow)"/>
+                <path d="M19 36 Q27 44 35 36" stroke="#b0e0ff" stroke-width="3.5" fill="none"/>
                 <path d="M19 36 Q27 41 35 36" stroke="#3ec6ff" stroke-width="2" fill="none"/>
-                <!-- Hilt -->
                 <rect x="23" y="37" width="8" height="4" rx="2" fill="#444" stroke="#232323" stroke-width="1"/>
-                <!-- Pommel -->
                 <circle cx="27" cy="46" r="3" fill="#b0e0ff" stroke="#3ec6ff" stroke-width="1"/>
                 <defs>
                     <linearGradient id="bladeGradient" x1="27" y1="7" x2="27" y2="37" gradientUnits="userSpaceOnUse">
@@ -370,44 +363,19 @@
                         <stop offset="0.5" stop-color="#3ec6ff"/>
                         <stop offset="1" stop-color="#1e6fa7"/>
                     </linearGradient>
-                    <filter id="glow" x="0" y="30" width="54" height="20" filterUnits="userSpaceOnUse">
-                        <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
-                        <feMerge>
-                            <feMergeNode in="coloredBlur"/>
-                            <feMergeNode in="SourceGraphic"/>
-                        </feMerge>
-                    </filter>
                 </defs>
             </svg>
+            <div class="moonlight-dropdown" id="moonlightDropdown">
+                <strong>Moonlight Greatsword</strong><br>
+                The Moonlight Greatsword is a legendary weapon that has appeared in nearly every FromSoftware game, known for its iconic glowing blade and powerful magic attacks. [Add more history here!]
+            </div>
         </div>
-    </div>
-    <div id="home" class="page-section">
-        <div class="header"></div>
-        <div class="summary">
-            This webpage is about games I like. You can find multiple pages dedicated to different games with an essay style summary of the game and why I like it.
-        </div>
-        <div class="interactive-tag" onclick="alert('You found the secret tag! Try exploring the other pages for more surprises!')" style="margin-top:32px; display:inline-block; cursor:pointer; background:linear-gradient(90deg,#3ec6ff,#b0e0ff); color:#232323; font-weight:bold; border-radius:18px; padding:10px 28px; font-size:1.1em; box-shadow:0 2px 8px rgba(62,198,255,0.15); transition:background 0.2s,transform 0.2s;">
-            <span role="img" aria-label="sparkle">✨</span> Interactive Tag! <span role="img" aria-label="sparkle">✨</span>
-        </div>
-    </div>
-    <div id="page2" class="page-section">
         <div class="image-placeholder">
             <img src="https://static1.dualshockersimages.com/wordpress/wp-content/uploads/2022/10/Dark-Souls-3-Ending.jpg" alt="Dark Souls 3">
         </div>
         <p class="large-textbox">
             Dark Souls 3 is a masterclass in atmospheric world-building and challenging gameplay. Its interconnected environments, haunting soundtrack, and rewarding combat make every victory feel earned. The sense of discovery and the thrill of overcoming seemingly insurmountable odds are what keep me coming back to this game.
         </p>
-    </div>
-    <!-- Moonlight Greatsword Modal -->
-    <div id="moonlight-modal-bg" class="modal-bg" onclick="closeMoonlightModal()">
-        <div class="modal-content" onclick="event.stopPropagation()">
-            <button class="modal-close" onclick="closeMoonlightModal()" title="Close">&times;</button>
-            <h2>Moonlight Greatsword</h2>
-            <p>
-                <!-- Fill in the sword's history here -->
-                The Moonlight Greatsword is a legendary weapon that has appeared in nearly every FromSoftware game, known for its iconic glowing blade and powerful magic attacks. [Add more history here!]
-            </p>
-        </div>
     </div>
     <div id="page3" class="page-section">
         <div class="header"></div>
